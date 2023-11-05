@@ -1,5 +1,6 @@
 # ARCHITECTURE OF MASSIVELY DISTRIBUTED APPLICATIONS
-* URL GitHub
+
+**URL GitHub:** https://github.com/camrojass/twiterlab_API.git
 
 ## Descripción
 Repositorio de APIs prototipo para realizar publicación, lectura individual, lectura en lista y eliminación de tweets.
@@ -34,17 +35,24 @@ public class Post {
 	}
 ```
 ## Recursos técnicos de la solución <a name="id2"></a>
-- Java
-  Usado para el desarrollo de la solución. Como punto adicional, se incluyeron recursos adicionales para integrar la solución en DynamoDB
-- Maven
-  Framework de java usado para el desarrollo de la solución
-- Serverless Framework
-  Usado para el deploy de la solución.
-- AWS API Gateway
-  A través de los lambas se creo la solución
-- Dynamo DB
-  Base de datos donde se almaceno la solución.
-- node.js (requerido para instalar severless en la máquina local)
+- Java 8.
+
+Usado para el desarrollo de la solución. Como punto adicional, se incluyeron recursos adicionales para integrar la solución en DynamoDB
+- Maven.
+
+Framework de java usado para el desarrollo de la solución
+- Serverless Framework.
+
+Usado para el deploy de la solución.
+- AWS API Gateway.
+
+A través de los lambas se creo la solución
+- Dynamo DB.
+
+Base de datos donde se almaceno la solución.
+- node.js.
+
+Requerido para instalar severless en la máquina local
 
 ## Arquitectura solución <a name="id3"></a>
 ![APIs](https://github.com/camrojass/twiterlab_API/assets/100396227/ddba6836-42bc-44d6-896b-87eb8b14fb44)
@@ -67,7 +75,7 @@ mvn clean install
 
     - Guía de configuración : [Ver link](https://www.serverless.com/framework/docs/tutorial)
 
-Haga clic en el link a continuación para ver el archivo [serverless.yml]()
+Haga clic en el link a continuación para ver el archivo [serverless.yml](serverless.yml)
 
 5. Invocar el siguiente comando
 ```bash
@@ -75,6 +83,9 @@ serverless deploy
 ```
 
 ## Evidencia <a name="id5"></a>
+### Vista de recursos publicados en aws
+![image](https://github.com/camrojass/twiterlab_API/assets/100396227/68979aee-240f-40bd-b3d2-8cf9de18c5bf)
+
 
 ## Autores <a name="id6"></a>
 * **Camilo Alejandro Rojas** - *Trabajo y documentación* - [camrojass](https://github.com/camrojass)
