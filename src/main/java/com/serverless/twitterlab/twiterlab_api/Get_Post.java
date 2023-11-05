@@ -1,0 +1,64 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.serverless.twitterlab.twiterlab_api;
+/**
+ *
+ * @author camrojass
+ * @mail camilo.rojas@mail.escuelaing.edu.co
+ */
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.serverless.twitterlab.domain.Post;
+import com.serverless.twitterlab.http.ApiGatewayResponse;
+import com.serverless.twitterlab.http.Response;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.log4j.Logger;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
+
+public class Get_Post implements RequestHandler<Map<String, Object>, ApiGatewayResponse>{
+    
+    private final Logger logger = Logger.getLogger(this.getClass());
+    
+    @Override
+    public ApiGatewayResponse handleRequest(Map<String, Object>input, Context context) {
+        
+        try{
+            Map<String,String> pathParameters =  (Map<String,String>)input.get("pathParameters");
+            String id = pathParameters.get("id");
+
+            Post post = new Post().get(id);  
+            
+            if (post != null) {
+                return ApiGatewayResponse.builder()
+                        .setStatusCode(200)
+                        .setObjectBody(post)
+                        .setHeaders(Collections.singletonMap("X-Powered-By", "AWS Lambda & Serverless"))
+                        .build();
+            } else {
+                return ApiGatewayResponse.builder()
+                        .setStatusCode(404)
+                        .setObjectBody("Users with id: '" + id + "' not found.")
+                        .setHeaders(Collections.singletonMap("X-Powered-By", "AWS Lambda & Serverless"))
+                        .build();
+            }   
+        } catch (Exception ex) {
+            logger.error("Error in retrieving Post: " + ex);
+            Response responseBody = new Response("Post in retrieving Posts: ", input);
+            return ApiGatewayResponse.builder()
+                    .setStatusCode(500)
+                    .setObjectBody(responseBody)
+                    .setHeaders(Collections.singletonMap("X-Powered-By", "AWS Lambda & Serverless"))
+                    .build();
+    
+        }
+    }
+}
