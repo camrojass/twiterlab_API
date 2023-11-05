@@ -1,0 +1,92 @@
+
+service: twiterlab-API
+frameworkVersion: '1'
+
+custom:
+  usersTableName: 'java-users-${self:provider.stage}'
+  threadsTableName: 'java-threads-${self:provider.stage}'
+
+provider:
+  name: aws
+  runtime: java8
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+  environment:
+    USERS_TABLE_NAME: ${self:custom.usersTableName}
+    THREADS_TABLE_NAME: ${self:custom.threadsTableName}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+      Resource:
+          - { "Fn::GetAtt": [ "UsersDynamoDBTable", "Arn" ] }
+          - { "Fn::GetAtt": [ "ThreadsDynamoDBTable", "Arn" ] }
+
+
+package:
+  artifact: 'target/${self:service}-${self:provider.stage}.jar'
+
+plugins:
+  - serverless-auto-swagger
+
+functions:
+  listPost:
+    handler: com.serverless.services.GetListPost
+    timeout: 300
+    events:
+      - http:
+          path: twitter/post/
+          method: get
+  getPost:
+    handler: com.serverless.services.GetPost
+    timeout: 300
+    events:
+      - http:
+          path: twitter/post/{id}
+          method: get
+
+  postComment:
+    handler: com.serverless.services.PostComment
+    timeout: 300
+    events:
+      - http:
+          path: twitter/post
+          method: post
+
+  deleteUser:
+    handler: com.serverless.services.DeleteUser
+    timeout: 300
+    events:
+      - http:
+          path: twitter/post/{id}
+          method: delete
+
+resources:
+  Resources:
+    PostDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.postTableName}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: sender
+            AttributeType: S
+          - AttributeName: comment
+            AttributeType: S
+          - AttributeName: date
+            AttributeType: d
+          - AttributeName: IsPrivate
+            AttributeType: b
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
